@@ -7,12 +7,25 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: chamar sua função de login, ex:
-    // const token = await authService.login({ email, password });
-    // localStorage.setItem("token", token);
-    // navigate("/products");
+
+    // Recupera array de usuários
+    const usersJson = localStorage.getItem("users");
+    const users = usersJson ? JSON.parse(usersJson) : [];
+
+    // Tenta encontrar usuário com email+senha
+    const user = users.find(
+      (u) => u.email === email && u.password === password
+    );
+
+    if (user) {
+      // "Token" simples: salva o email como flag de sessão
+      localStorage.setItem("token", user.email);
+      navigate("/products");
+    } else {
+      alert("E-mail ou senha inválidos.");
+    }
   };
 
   return (

@@ -7,11 +7,25 @@ export default function CreateLogin() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: chamar sua função de cadastro, ex:
-    // await authService.register({ email, password });
-    // navigate("/login");
+
+    // Recupera array de usuários do localStorage (ou cria vazio)
+    const usersJson = localStorage.getItem("users");
+    const users = usersJson ? JSON.parse(usersJson) : [];
+
+    // Verifica se email já está cadastrado
+    if (users.some((u) => u.email === email)) {
+      alert("Este e-mail já está em uso.");
+      return;
+    }
+
+    // Adiciona novo usuário
+    users.push({ email, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Cadastro realizado com sucesso! Faça login agora.");
+    navigate("/login");
   };
 
   return (
